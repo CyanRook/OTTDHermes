@@ -1,12 +1,12 @@
-class TestAI extends AIInfo 
+class HermesAI extends AIInfo 
  {
-   function GetAuthor()      { return "Author Name"; }
-   function GetName()        { return "TestAI"; }
-   function GetDescription() { return "Testing AI"; }
+   function GetAuthor()      { return "Ryan Cook/Praveen Sanjay"; }
+   function GetName()        { return "HermesAI"; }
+   function GetDescription() { return "OTTD AI built for VG AI at Georgia Tech"; }
    function GetVersion()     { return 1; }
-   function GetDate()        { return "2009-07-29"; }
-   function CreateInstance() { return "TestAI"; }
-   function GetShortName()   { return "TEST"; }
+   function GetDate()        { return "2013-07-15"; }
+   function CreateInstance() { return "HermesAI"; }
+   function GetShortName()   { return "Hermes"; }
    
    function GetSettings() 
    {
@@ -38,4 +38,4 @@ class TestAI extends AIInfo
    }
  }
  
- RegisterAI(TestAI());
+ RegisterAI(HermesAI());
