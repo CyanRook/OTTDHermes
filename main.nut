@@ -1,4 +1,4 @@
-import("pathfinder.road", "RoadPathFinder");
+import("pathfinder.road", "RoadPathFinder", 3);
 
 class HermesAI extends AIController
 {
