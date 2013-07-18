@@ -8,6 +8,9 @@ import("util.superlib","SuperLib",13);
 require("Roads/roadconnecttown.nut");
 require("Roads/util.nut");
 Road <- SuperLib.Road;
+RoadBuilder <- SuperLib.RoadBuilder;
+Engine <- SuperLib.Engine;
+OrderList <- SuperLib.OrderList;
 
 /* External Libraries Imported From OTTD Online Resources */
 import("pathfinder.road", "RoadPathFinder", 3);
@@ -40,12 +43,16 @@ function HermesAI::Start()
     local townid_b = townlist.Next();
 	AIRoad.SetCurrentRoadType(AIRoad.ROADTYPE_ROAD);
 	
+	local rb=RoadBuilder();
+
 	local Depot1 = Util.BuildDepot(townid_a);
 	local Station1 = Util.BuildBusStation(townid_a);
 	Util.BuildDepot(townid_b);
 	local Station2 = Util.BuildBusStation(townid_b);
+	rb.Init(Station1,Station2);
+//	rb.ConnectTiles();
 	RoadConnectTown.BuildRoad(townid_a, townid_b);
-	local engine_list = AIEngineList(1);
+	local engine_list = AIEngineList(AIVehicle.VT_ROAD);
 	local Correct_Cargo = AICargoList_StationAccepting(Station1);
 	local engine_choice;
 	foreach(engine in engine_list)
@@ -55,11 +62,21 @@ function HermesAI::Start()
 			engine_choice = engine;
 		}
 	}
+	//local myEngine=Engine.GetEngine_PAXLink(10, AIVehicle.VT_ROAD);
+	local Veh1=AIVehicle.BuildVehicle(Depot1,engine_choice);
+	local ol=OrderList();
+	ol.AddStop(AIStation.GetStationID(Station1), AIOrder.AIOF_NONE);
+	ol.AddStop(AIStation.GetStationID(Station2), AIOrder.AIOF_NONE);
+	ol.ApplyToVehicle(Veh1);
+	AIVehicle.StartStopVehicle(Veh1)
+	AILog.Info("Made it past util stuff");
+	/*
 	local VehID = AIVehicle.BuildVehicle(AIDepotList(1).Begin(), engine_choice);
 	local StList = AIStationList(2);
 	local TList = AITileList_StationType(StList.Begin(), 2);
 	AIOrder.InsertOrder(VehID,0,TList.Begin(),0);
 	AIOrder.InsertOrder(VehID,0,TList.Next(),0);
+	*/
 	
 	AILog.Info("Made it past util stuff");
     
