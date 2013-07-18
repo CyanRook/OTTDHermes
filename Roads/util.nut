@@ -10,14 +10,13 @@ function Util::BuildDepot(town)
 {
 
 	local newDepot=Road.BuildNextToRoad(AITown.GetLocation(town),"DEPOT",-1,-1,50,155);
-
-
+	return newDepot;
 }
 
 function Util::BuildBusStation(town)
 {
 	local newStation=Road.BuildNextToRoad(AITown.GetLocation(town), "BUS_STOP", -1, -1, 50, 150);
-
+	return newStation;
 }
 
 /*
