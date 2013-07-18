@@ -2,8 +2,12 @@
  *	Developed by Ryan Cook & Praveen Sanjay
  *	Main File */
 
+ // Add all the files for libraries here
+import("util.superlib","SuperLib",13);
 /* Files writen by us to help our code */
 require("Roads/roadconnecttown.nut");
+require("Roads/util.nut");
+Road <- SuperLib.Road;
 
 /* External Libraries Imported From OTTD Online Resources */
 import("pathfinder.road", "RoadPathFinder", 3);
@@ -24,6 +28,8 @@ function HermesAI::Start()
     SetCompanyName();
     /* Get a list of all towns on the map. */
     local townlist = AITownList();
+	
+
 
     /* Sort the list by population, highest population first. */
     townlist.Valuate(AITown.GetPopulation);
@@ -32,6 +38,11 @@ function HermesAI::Start()
     /* Pick the two towns with the highest population. */
     local townid_a = townlist.Begin();
     local townid_b = townlist.Next();
+	
+	AIRoad.SetCurrentRoadType(AIRoad.ROADTYPE_ROAD);
+	Util.BuildDepot(townid_a)
+	Util.BuildBusStation(townid_a)
+	AILog.Info("Made it past util stuff");
 
 	RoadConnectTown.BuildRoad(townid_a,townid_b);
     
