@@ -53,7 +53,7 @@ function HermesAI::Start()
 	local Station2 = Util.BuildBusStation(townid_b);
 	rb.Init(Station1,Station2);
 //	rb.ConnectTiles();
-	RoadConnectTown.BuildRoad(townid_a, townid_b);
+//	RoadConnectTown.BuildRoad(townid_a, townid_b);
 	local engine_list = AIEngineList(AIVehicle.VT_ROAD);
 	local Correct_Cargo = AICargoList_StationAccepting(Station1);
 	local engine_choice;
@@ -66,6 +66,8 @@ function HermesAI::Start()
 	}
 	//local myEngine=Engine.GetEngine_PAXLink(10, AIVehicle.VT_ROAD);
 	local Veh1=AIVehicle.BuildVehicle(Depot1,engine_choice);
+	if(!AIVehicle.IsValidVehicle(Veh1)) 
+		AILog.Warning("Could not build a vehicle: " + AIError.GetLastErrorString());
 	local ol=OrderList();
 	ol.AddStop(AIStation.GetStationID(Station1), AIOrder.AIOF_NONE);
 	ol.AddStop(AIStation.GetStationID(Station2), AIOrder.AIOF_NONE);
