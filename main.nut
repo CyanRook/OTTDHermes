@@ -9,6 +9,8 @@ import("util.superlib","SuperLib",13);
 /* Files writen by us to help our code */
 require("Roads/roadconnecttown.nut");
 require("Roads/util.nut");
+require("Roads/roadroute.nut")
+
 Road <- SuperLib.Road;
 RoadBuilder <- SuperLib.RoadBuilder;
 Engine <- SuperLib.Engine;
@@ -46,42 +48,15 @@ function HermesAI::Start()
 	AIRoad.SetCurrentRoadType(AIRoad.ROADTYPE_ROAD);
 	
 	RoadConnectTown.BuildRoad(townid_a, townid_b);
-
-	local Depot1 = Util.BuildDepot(townid_a);
-	local Station1 = Util.BuildBusStation(townid_a);
-	Util.BuildDepot(townid_b);
-	local Station2 = Util.BuildBusStation(townid_b);
-//	rb.Init(Station1,Station2);
-//	rb.ConnectTiles();
-//	RoadConnectTown.BuildRoad(townid_a, townid_b);
-	local Correct_Cargo = AICargoList_StationAccepting(Station1);
-	local engine_list = AIEngineList(AIVehicle.VT_ROAD);
-	local engine_choice;
 	
-	engine_list.Valuate(AIEngine.GetRoadType);
-	engine_list.KeepValue(AIRoad.ROADTYPE_ROAD);
-	
-	local balance = AICompany.GetBankBalance(AICompany.COMPANY_SELF);
-	engine_list.Valuate(AIEngine.GetPrice);
-	engine_list.KeepBelowValue(balance);
-
-	engine_list.Valuate(AIEngine.GetCargoType)
-	engine_list.KeepValue(Correct_Cargo.Begin()); 
-
-	engine_list.Valuate(AIEngine.GetCapacity)
-	engine_list.KeepTop(1);
-	
-	engine_choice = engine_list.Begin();
-	
-	//local myEngine=Engine.GetEngine_PAXLink(10, AIVehicle.VT_ROAD);
-	local Veh1=AIVehicle.BuildVehicle(Depot1,engine_choice);
-	if(!AIVehicle.IsValidVehicle(Veh1)) 
-		AILog.Warning("Could not build a vehicle: " + AIError.GetLastErrorString());
-	local ol=OrderList();
-	ol.AddStop(AIStation.GetStationID(Station1), AIOrder.AIOF_NONE);
-	ol.AddStop(AIStation.GetStationID(Station2), AIOrder.AIOF_NONE);
-	ol.ApplyToVehicle(Veh1);
-	AIVehicle.StartStopVehicle(Veh1)
+	local Route_1 = RoadRoute();
+	Route_1.Init();
+	Route_1.AddTerminal(Util.BuildBusStation(townid_a));
+	Route_1.AddTerminal(Util.BuildBusStation(townid_b));
+	Route_1.AddDepot(Util.BuildDepot(townid_a));
+	Route_1.AddDepot(Util.BuildDepot(townid_b));
+	Route_1.AutoSetCargo();
+	Route_1.BuildVehicle();
 	AILog.Info("Made it past util stuff");
 	/*
 	local VehID = AIVehicle.BuildVehicle(AIDepotList(1).Begin(), engine_choice);
