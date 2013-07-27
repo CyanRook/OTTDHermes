@@ -45,25 +45,34 @@ function HermesAI::Start()
     local townid_b = townlist.Next();
 	AIRoad.SetCurrentRoadType(AIRoad.ROADTYPE_ROAD);
 	
-	local rb=RoadBuilder();
+	RoadConnectTown.BuildRoad(townid_a, townid_b);
 
 	local Depot1 = Util.BuildDepot(townid_a);
 	local Station1 = Util.BuildBusStation(townid_a);
 	Util.BuildDepot(townid_b);
 	local Station2 = Util.BuildBusStation(townid_b);
-	rb.Init(Station1,Station2);
+//	rb.Init(Station1,Station2);
 //	rb.ConnectTiles();
 //	RoadConnectTown.BuildRoad(townid_a, townid_b);
-	local engine_list = AIEngineList(AIVehicle.VT_ROAD);
 	local Correct_Cargo = AICargoList_StationAccepting(Station1);
+	local engine_list = AIEngineList(AIVehicle.VT_ROAD);
 	local engine_choice;
-	foreach(engine in engine_list)
-	{
-		if(AIEngine.CanPullCargo(engine,Correct_Cargo.Begin()))
-		{
-			engine_choice = engine;
-		}
-	}
+	
+	engine_list.Valuate(AIEngine.GetRoadType);
+	engine_list.KeepValue(AIRoad.ROADTYPE_ROAD);
+	
+	local balance = AICompany.GetBankBalance(AICompany.COMPANY_SELF);
+	engine_list.Valuate(AIEngine.GetPrice);
+	engine_list.KeepBelowValue(balance);
+
+	engine_list.Valuate(AIEngine.GetCargoType)
+	engine_list.KeepValue(Correct_Cargo.Begin()); 
+
+	engine_list.Valuate(AIEngine.GetCapacity)
+	engine_list.KeepTop(1);
+	
+	engine_choice = engine_list.Begin();
+	
 	//local myEngine=Engine.GetEngine_PAXLink(10, AIVehicle.VT_ROAD);
 	local Veh1=AIVehicle.BuildVehicle(Depot1,engine_choice);
 	if(!AIVehicle.IsValidVehicle(Veh1)) 
