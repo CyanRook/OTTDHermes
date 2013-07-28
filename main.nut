@@ -54,10 +54,16 @@ function HermesAI::Start()
 	New_Route.Init();
 	New_Route.AddTerminal(Util.BuildBusStation(townid_a));
 	New_Route.AddDepot(Util.BuildDepot(townid_a));
+	New_Route.AddTerminal(Util.BuildBusStation(townid_a));
+	New_Route.AddTerminal(Util.BuildBusStation(townid_a));
+	New_Route.AddTerminal(Util.BuildBusStation(townid_a));
 	for(local i=0;i<3;i+=1)
 	{
 		local closeTown = Util.ClosestTown(townid_a,townlist,connectedList);
 		connectedList.AddItem(closeTown,0);
+		New_Route.AddTerminal(Util.BuildBusStation(closeTown));
+		New_Route.AddTerminal(Util.BuildBusStation(closeTown));
+		New_Route.AddTerminal(Util.BuildBusStation(closeTown));
 		New_Route.AddTerminal(Util.BuildBusStation(closeTown));
 		New_Route.AddDepot(Util.BuildDepot(closeTown));
 		RoadConnectTown.BuildRoad(townid_a, closeTown);
@@ -80,6 +86,8 @@ function HermesAI::Start()
 	New_Route.Init();
 	New_Route.AddTerminal(Util.BuildBusStation(townid_a));
 	New_Route.AddTerminal(Util.BuildBusStation(townid_b));
+	New_Route.AddDepot(Util.BuildDepot(townid_a));
+	New_Route.AddDepot(Util.BuildDepot(townid_a));
 	New_Route.AddDepot(Util.BuildDepot(townid_a));
 	New_Route.AddDepot(Util.BuildDepot(townid_b));
 	New_Route.AutoSetCargo();
