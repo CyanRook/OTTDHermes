@@ -9,7 +9,7 @@ import("util.superlib","SuperLib",13);
 /* Files writen by us to help our code */
 require("Roads/roadconnecttown.nut");
 require("Roads/util.nut");
-require("Roads/roadroute.nut")
+require("Roads/roadroute.nut");
 
 Road <- SuperLib.Road;
 RoadBuilder <- SuperLib.RoadBuilder;
@@ -33,6 +33,9 @@ function HermesAI::Start()
 {
     AILog.Info("HermesAI Started.");
     SetCompanyName();
+	
+	local Route_List = [];
+	
     /* Get a list of all towns on the map. */
     local townlist = AITownList();
 	local connectedList = AIList();
@@ -47,20 +50,22 @@ function HermesAI::Start()
     local townid_b = townlist.Next();
 	connectedList.AddItem(townid_a,0)
 	AIRoad.SetCurrentRoadType(AIRoad.ROADTYPE_ROAD);
-	local Route_1 = RoadRoute();
-	Route_1.Init();
-	Route_1.AddTerminal(Util.BuildBusStation(townid_a));
-	Route_1.AddDepot(Util.BuildDepot(townid_a));
+	local New_Route = RoadRoute();
+	New_Route.Init();
+	New_Route.AddTerminal(Util.BuildBusStation(townid_a));
+	New_Route.AddDepot(Util.BuildDepot(townid_a));
 	for(local i=0;i<3;i+=1)
 	{
 		local closeTown = Util.ClosestTown(townid_a,townlist,connectedList);
 		connectedList.AddItem(closeTown,0);
-		Route_1.AddTerminal(Util.BuildBusStation(closeTown));
-		Route_1.AddDepot(Util.BuildDepot(closeTown));
+		New_Route.AddTerminal(Util.BuildBusStation(closeTown));
+		New_Route.AddDepot(Util.BuildDepot(closeTown));
 		RoadConnectTown.BuildRoad(townid_a, closeTown);
 	}
-	Route_1.AutoSetCargo();
-	Route_1.BuildVehicle();
+	New_Route.AutoSetCargo();
+	New_Route.BuildVehicle();
+	
+	Route_List.append(New_Route);
 
 	
 	//RoadConnectTown.BuildRoad(townid_a, townid_b);
@@ -71,14 +76,14 @@ function HermesAI::Start()
 
 	
 	
-/*	local Route_1 = RoadRoute();
-	Route_1.Init();
-	Route_1.AddTerminal(Util.BuildBusStation(townid_a));
-	Route_1.AddTerminal(Util.BuildBusStation(townid_b));
-	Route_1.AddDepot(Util.BuildDepot(townid_a));
-	Route_1.AddDepot(Util.BuildDepot(townid_b));
-	Route_1.AutoSetCargo();
-	Route_1.BuildVehicle();*/
+/*	local New_Route = RoadRoute();
+	New_Route.Init();
+	New_Route.AddTerminal(Util.BuildBusStation(townid_a));
+	New_Route.AddTerminal(Util.BuildBusStation(townid_b));
+	New_Route.AddDepot(Util.BuildDepot(townid_a));
+	New_Route.AddDepot(Util.BuildDepot(townid_b));
+	New_Route.AutoSetCargo();
+	New_Route.BuildVehicle();*/
 	AILog.Info("Made it past util stuff");
 	/*
 	local VehID = AIVehicle.BuildVehicle(AIDepotList(1).Begin(), engine_choice);

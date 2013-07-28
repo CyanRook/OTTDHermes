@@ -90,3 +90,7 @@ function RoadRoute::BuildVehicle()
 	AIVehicle.StartStopVehicle(Veh1)
 	AddVehicle(Veh1);
 }
+
+function RoadRoute::EvaluateRoute()
+{
+}

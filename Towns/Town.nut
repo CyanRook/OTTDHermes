@@ -1,9 +1,10 @@
 class Town
 {
 	constructor();
+	town_id = null;
 	terminal_list = AIList();
 	depot_list  = AIList();
-	route_list = AIList();
+	route_list = [];
 }
 
 function Town::AddTerminal(terminal)
