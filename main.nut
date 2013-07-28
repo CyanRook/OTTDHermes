@@ -25,6 +25,8 @@ class HermesAI extends AIController
     constructor()
     {
     } 
+	Route_List = [];
+	Start_Date = null;
 }
  
  /* Main Function Call
@@ -33,8 +35,7 @@ function HermesAI::Start()
 {
     AILog.Info("HermesAI Started.");
     SetCompanyName();
-	
-	local Route_List = [];
+	Start_Date = AIDate.GetCurrentDate();
 	
     /* Get a list of all towns on the map. */
     local townlist = AITownList();
@@ -64,39 +65,54 @@ function HermesAI::Start()
 	}
 	New_Route.AutoSetCargo();
 	New_Route.BuildVehicle();
+	New_Route.BuildVehicle();
 	
 	Route_List.append(New_Route);
 
-	
-	//RoadConnectTown.BuildRoad(townid_a, townid_b);
-
-
-
-	
-
-	
-	
-/*	local New_Route = RoadRoute();
-	New_Route.Init();
-	New_Route.AddTerminal(Util.BuildBusStation(townid_a));
-	New_Route.AddTerminal(Util.BuildBusStation(townid_b));
-	New_Route.AddDepot(Util.BuildDepot(townid_a));
-	New_Route.AddDepot(Util.BuildDepot(townid_b));
-	New_Route.AutoSetCargo();
-	New_Route.BuildVehicle();*/
 	AILog.Info("Made it past util stuff");
-	/*
-	local VehID = AIVehicle.BuildVehicle(AIDepotList(1).Begin(), engine_choice);
-	local StList = AIStationList(2);
-	local TList = AITileList_StationType(StList.Begin(), 2);
-	AIOrder.InsertOrder(VehID,0,TList.Begin(),0);
-	AIOrder.InsertOrder(VehID,0,TList.Next(),0);
-	*/
+	
+	ActionLoop();
 	
 	AILog.Info("Made it past util stuff");
     
     AILog.Info("Done");
 }
+ 
+ function HermesAI::ActionLoop()
+ {
+	AILog.Info("Entered Action Loop");
+	while (true)
+	{
+		EvaluateRoadRoutes();
+		ImproveRoadRoutes();
+		RepayLoans();
+	}
+}
+
+function HermesAI::EvaluateRoadRoutes()
+{
+	foreach(route in Route_List)
+	{
+		route.EvaluateRoute();
+	}
+}
+
+function HermesAI::ImproveRoadRoutes()
+{
+	foreach(route in Route_List)
+	{
+		route.ImproveRoute();
+	}
+}
+
+function HermesAI::RepayLoans()
+{
+	if((AICompany.GetLoanAmount() > 0) && (AICompany.GetBankBalance(AICompany.COMPANY_SELF) > 20000) && ((AIDate.GetYear(AIDate.GetCurrentDate())-AIDate.GetYear(Start_Date))>1))
+	{
+		AICompany.SetLoanAmount(AICompany.GetLoanAmount() - 20000);
+	}
+}
+		
  
 function HermesAI::Save()
 {

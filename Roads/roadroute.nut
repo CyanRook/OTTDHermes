@@ -5,6 +5,8 @@ class RoadRoute
 	depot_list  = AIList();
 	vehicle_list = AIList();
 	cargo_type = null;
+	engine_choice = null;
+	evalute_result = false;
 }
 
 function RoadRoute::Init()
@@ -56,10 +58,9 @@ function RoadRoute::RemoveVehicle(vehicle)
 	this.vehicle_list.RemoveItem(vehicle,0);
 }
 
-function RoadRoute::BuildVehicle()
+function RoadRoute::ChooseVehicle()
 {
 	local engine_list = AIEngineList(AIVehicle.VT_ROAD);
-	local engine_choice;
 	
 	engine_list.Valuate(AIEngine.GetRoadType);
 	engine_list.KeepValue(AIRoad.ROADTYPE_ROAD);
@@ -75,22 +76,57 @@ function RoadRoute::BuildVehicle()
 	engine_list.KeepTop(1);
 	
 	engine_choice = engine_list.Begin();
-	
-	local Veh1=AIVehicle.BuildVehicle(depot_list.Begin(),engine_choice);
+}
+
+function RoadRoute::BuildVehicle()
+{
+	ChooseVehicle();
+	local Veh1= AIVehicle.BuildVehicle(depot_list.Begin(),engine_choice);
 	if(!AIVehicle.IsValidVehicle(Veh1)) 
 		AILog.Warning("Could not build a vehicle: " + AIError.GetLastErrorString());
-	local ol=OrderList();
-	foreach(terminal,v in terminal_list)
+	else
 	{
-		//ol.AddStop(AIStation.GetStationID(terminal), AIOrder.AIOF_NONE);
-		AIOrder.InsertOrder(Veh1,0,terminal,AIOrder.AIOF_NONE);
+		local ol=OrderList();
+		foreach(terminal,v in terminal_list)
+		{
+			//ol.AddStop(AIStation.GetStationID(terminal), AIOrder.AIOF_NONE);
+			AIOrder.InsertOrder(Veh1,0,terminal,AIOrder.AIOF_NONE);
+		}
+		AILog.Info(AIOrder.IsValidVehicleOrder(Veh1,0))
+		//ol.ApplyToVehicle(Veh1);
+		AIVehicle.StartStopVehicle(Veh1)
+		AddVehicle(Veh1);
 	}
-	AILog.Info(AIOrder.IsValidVehicleOrder(Veh1,0))
-	//ol.ApplyToVehicle(Veh1);
-	AIVehicle.StartStopVehicle(Veh1)
-	AddVehicle(Veh1);
 }
 
 function RoadRoute::EvaluateRoute()
 {
+	evalute_result = true;
+	local max_cargo = 0;
+	foreach(veh in vehicle_list)
+	{
+		if (AIVehicle.GetProfitLastYear(veh) < 0)
+		{
+			evalute_result = false;
+		}
+		if (AIVehicle.GetCapacity(veh, cargo_type) > max_cargo)
+		{
+			max_cargo = AIVehicle.GetCapacity(veh, cargo_type);
+		}
+	}
+	foreach(terminal in terminal_list)
+	{
+		if (AIStation.GetCargoWaiting(terminal, cargo_type) < max_cargo)
+		{
+			evalute_result = false;
+		}
+	}
+}
+
+function RoadRoute::ImproveRoute()
+{
+	if (evalute_result)
+	{
+		BuildVehicle();
+	}
 }
