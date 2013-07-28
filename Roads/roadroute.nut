@@ -103,6 +103,7 @@ function RoadRoute::EvaluateRoute()
 {
 	evalute_result = true;
 	local max_cargo = 0;
+	local total_cargo = 0;
 	foreach(veh in vehicle_list)
 	{
 		if (AIVehicle.GetProfitLastYear(veh) < 0)
@@ -116,11 +117,9 @@ function RoadRoute::EvaluateRoute()
 	}
 	foreach(terminal in terminal_list)
 	{
-		if (AIStation.GetCargoWaiting(terminal, cargo_type) < max_cargo)
-		{
-			evalute_result = false;
-		}
+		total_cargo = AIStation.GetCargoWaiting(terminal, cargo_type) + total_cargo;
 	}
+	if (total_cargo/vehicle_list.Count() > max_cargo)
 }
 
 function RoadRoute::ImproveRoute()
