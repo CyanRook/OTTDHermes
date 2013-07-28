@@ -79,14 +79,14 @@ function RoadRoute::BuildVehicle()
 	local Veh1=AIVehicle.BuildVehicle(depot_list.Begin(),engine_choice);
 	if(!AIVehicle.IsValidVehicle(Veh1)) 
 		AILog.Warning("Could not build a vehicle: " + AIError.GetLastErrorString());
-	//local ol=OrderList();
-	foreach(terminal in terminal_list)
+	local ol=OrderList();
+	foreach(terminal,v in terminal_list)
 	{
-		//ol.AddStop(AIStation.GetStationID(terminal), AIOrder.AIOF_NON_STOP_DESTINATION);
-		AIOrder.InsertOrder(Veh1,0,AIStation.GetStationID(terminal),AIOrder.AIOF_NONE);
+		//ol.AddStop(AIStation.GetStationID(terminal), AIOrder.AIOF_NONE);
+		AIOrder.InsertOrder(Veh1,0,terminal,AIOrder.AIOF_NONE);
 	}
+	AILog.Info(AIOrder.IsValidVehicleOrder(Veh1,0))
 	//ol.ApplyToVehicle(Veh1);
-
 	AIVehicle.StartStopVehicle(Veh1)
 	AddVehicle(Veh1);
 }
