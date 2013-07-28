@@ -45,9 +45,31 @@ function HermesAI::Start()
     /* Pick the two towns with the highest population. */
     local townid_a = townlist.Begin();
     local townid_b = townlist.Next();
+	local minDist = 2137483647;
+	local closeTown = 0;
+	local maxTile = AITown.GetLocation(townid_a);
+	foreach(town in townlist)
+	{
+		AILog.Info(AITown.GetName(town))
+		AILog.Info(AITown.IsValidTown(town))
+		if(AITown.IsValidTown(town))
+		{
+			local distance = AITile.GetDistanceManhattanToTile(town,maxTile);
+			AILog.Info(distance);
+			
+			if(distance < minDist)
+				if(distance > 0)
+				{
+					closeTown = town;
+					minDist = distance;
+				}
+		}
+	}
+	
 	AIRoad.SetCurrentRoadType(AIRoad.ROADTYPE_ROAD);
 	
-	RoadConnectTown.BuildRoad(townid_a, townid_b);
+	//RoadConnectTown.BuildRoad(townid_a, townid_b);
+	RoadConnectTown.BuildRoad(townid_a, closeTown);
 	
 	local Route_1 = RoadRoute();
 	Route_1.Init();
