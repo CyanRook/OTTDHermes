@@ -107,7 +107,7 @@ function HermesAI::ImproveRoadRoutes()
 
 function HermesAI::RepayLoans()
 {
-	if((AICompany.GetLoanAmount() > 0) && (AICompany.GetBankBalance(AICompany.COMPANY_SELF) > 20000) && ((AIDate.GetYear(AIDate.GetCurrentDate())-AIDate.GetYear(Start_Date))>1))
+	if((AICompany.GetLoanAmount() > 0) && (AICompany.GetBankBalance(AICompany.COMPANY_SELF) > 40000) && ((AIDate.GetYear(AIDate.GetCurrentDate())-AIDate.GetYear(Start_Date))>1))
 	{
 		AICompany.SetLoanAmount(AICompany.GetLoanAmount() - 20000);
 	}
