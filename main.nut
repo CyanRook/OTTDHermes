@@ -35,7 +35,7 @@ function HermesAI::Start()
     SetCompanyName();
     /* Get a list of all towns on the map. */
     local townlist = AITownList();
-	
+	local connectedList = AIList();
 
 
     /* Sort the list by population, highest population first. */
@@ -45,40 +45,40 @@ function HermesAI::Start()
     /* Pick the two towns with the highest population. */
     local townid_a = townlist.Begin();
     local townid_b = townlist.Next();
-	local minDist = 2137483647;
-	local closeTown = 0;
-	local maxTile = AITown.GetLocation(townid_a);
-	foreach(town,v in townlist)
-	{
-		AILog.Info(AITown.GetName(town))
-		AILog.Info(AITown.IsValidTown(town))
-		if(AITown.IsValidTown(town))
-		{
-			local distance = AITile.GetDistanceManhattanToTile(town,maxTile);
-			AILog.Info(distance);
-			
-			if(distance < minDist)
-				if(distance > 0)
-				{
-					closeTown = town;
-					minDist = distance;
-				}
-		}
-	}
-	
+	connectedList.AddItem(townid_a,0)
 	AIRoad.SetCurrentRoadType(AIRoad.ROADTYPE_ROAD);
+	local Route_1 = RoadRoute();
+	Route_1.Init();
+	Route_1.AddTerminal(Util.BuildBusStation(townid_a));
+	Route_1.AddDepot(Util.BuildDepot(townid_a));
+	for(local i=0;i<3;i+=1)
+	{
+		local closeTown = Util.ClosestTown(townid_a,townlist,connectedList);
+		connectedList.AddItem(closeTown,0);
+		Route_1.AddTerminal(Util.BuildBusStation(closeTown));
+		Route_1.AddDepot(Util.BuildDepot(closeTown));
+		RoadConnectTown.BuildRoad(townid_a, closeTown);
+	}
+	Route_1.AutoSetCargo();
+	Route_1.BuildVehicle();
+
 	
 	//RoadConnectTown.BuildRoad(townid_a, townid_b);
-	RoadConnectTown.BuildRoad(townid_a, closeTown);
+
+
+
 	
-	local Route_1 = RoadRoute();
+
+	
+	
+/*	local Route_1 = RoadRoute();
 	Route_1.Init();
 	Route_1.AddTerminal(Util.BuildBusStation(townid_a));
 	Route_1.AddTerminal(Util.BuildBusStation(townid_b));
 	Route_1.AddDepot(Util.BuildDepot(townid_a));
 	Route_1.AddDepot(Util.BuildDepot(townid_b));
 	Route_1.AutoSetCargo();
-	Route_1.BuildVehicle();
+	Route_1.BuildVehicle();*/
 	AILog.Info("Made it past util stuff");
 	/*
 	local VehID = AIVehicle.BuildVehicle(AIDepotList(1).Begin(), engine_choice);

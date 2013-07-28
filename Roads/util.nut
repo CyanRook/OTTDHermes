@@ -19,6 +19,33 @@ function Util::BuildBusStation(town)
 	return newStation;
 }
 
+function Util::ClosestTown(townStart,townlist,connectedList)
+{
+	local minDist = 2137483647;
+	local closeTown = 0;
+	local maxTile = AITown.GetLocation(townStart);
+	foreach(town,v in townlist)
+	{
+		//AILog.Info(AITown.GetName(town))
+		//AILog.Info(AITown.IsValidTown(town))
+		if(AITown.IsValidTown(town) && !connectedList.HasItem(town))
+		{
+			AILog.Info(AITown.GetName(town))
+			local distance = AITown.GetDistanceManhattanToTile(town,maxTile);
+			AILog.Info(distance);
+			
+			if(distance < minDist)
+				if(distance > 0)
+				{
+					closeTown = town;
+					minDist = distance;
+				}
+		}
+	}
+	return closeTown
+
+} 
+
 /*
 	local tile = AITown.GetLocation(town_id);
 	local xOffSet = 0;
