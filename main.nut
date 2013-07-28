@@ -48,7 +48,7 @@ function HermesAI::Start()
 	local minDist = 2137483647;
 	local closeTown = 0;
 	local maxTile = AITown.GetLocation(townid_a);
-	foreach(town in townlist)
+	foreach(town,v in townlist)
 	{
 		AILog.Info(AITown.GetName(town))
 		AILog.Info(AITown.IsValidTown(town))
