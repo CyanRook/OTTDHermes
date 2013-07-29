@@ -27,6 +27,7 @@ class HermesAI extends AIController
     } 
 	Route_List = [];
 	Start_Date = null;
+	Evaluate_Return = false;
 }
  
  /* Main Function Call
@@ -86,14 +87,16 @@ function HermesAI::Start()
 		EvaluateRoadRoutes();
 		ImproveRoadRoutes();
 		RepayLoans();
+		BuildNewRoutes();
 	}
 }
 
 function HermesAI::EvaluateRoadRoutes()
 {
+	Evaluate_Return = false;
 	foreach(route in Route_List)
 	{
-		route.EvaluateRoute();
+		Evaluate_Return = Evaluate_Return || route.EvaluateRoute();
 	}
 }
 
@@ -110,6 +113,14 @@ function HermesAI::RepayLoans()
 	if((AICompany.GetLoanAmount() > 0) && (AICompany.GetBankBalance(AICompany.COMPANY_SELF) > 40000) && ((AIDate.GetYear(AIDate.GetCurrentDate())-AIDate.GetYear(Start_Date))>5))
 	{
 		AICompany.SetLoanAmount(AICompany.GetLoanAmount() - 20000);
+	}
+}
+
+function HermesAI::BuildNewRoutes()
+{
+	if(Evaluate_Return == false)
+	{
+		//Code to build a new route set
 	}
 }
 		

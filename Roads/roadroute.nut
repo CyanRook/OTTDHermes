@@ -6,7 +6,7 @@ class RoadRoute
 	vehicle_list = AIList();
 	cargo_type = null;
 	engine_choice = null;
-	evalute_result = false;
+	evaluate_result = false;
 }
 
 function RoadRoute::Init()
@@ -101,14 +101,14 @@ function RoadRoute::BuildVehicle()
 
 function RoadRoute::EvaluateRoute()
 {
-	evalute_result = true;
+	evaluate_result = true;
 	local max_cargo = 0;
 	local total_cargo = 0;
 	foreach(veh in vehicle_list)
 	{
 		if (AIVehicle.GetProfitLastYear(veh) < 0)
 		{
-			evalute_result = false;
+			evaluate_result = false;
 		}
 		if (AIVehicle.GetCapacity(veh, cargo_type) > max_cargo)
 		{
@@ -119,12 +119,14 @@ function RoadRoute::EvaluateRoute()
 	{
 		total_cargo = AIStation.GetCargoWaiting(terminal, cargo_type) + total_cargo;
 	}
-	if (total_cargo/vehicle_list.Count() > max_cargo)
+	if (total_cargo/vehicle_list.Count() < max_cargo)
+		evaluate_result = false;
+	return evaluate_result;
 }
 
 function RoadRoute::ImproveRoute()
 {
-	if (evalute_result)
+	if (evaluate_result)
 	{
 		BuildVehicle();
 	}
