@@ -61,7 +61,7 @@ function Util::BuildTownRoute(town,countryRoute)
 	City_Route.AutoSetCargo();
 	City_Route.BuildVehicle(cityDepot);
 
-
+	return City_Route
 
 }
 
