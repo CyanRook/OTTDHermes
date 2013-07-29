@@ -21,7 +21,7 @@ function RoadRoute::SetCargo(cargo)
 function RoadRoute::AutoSetCargo()
 {
 	local cargo_list = AICargoList_StationAccepting(terminal_list.Begin());
-	foreach (terminal in terminal_list)
+	foreach (terminal,v in this.terminal_list)
 	{
 		cargo_list.KeepList(AICargoList_StationAccepting(terminal));
 	}
@@ -78,16 +78,16 @@ function RoadRoute::ChooseVehicle()
 	engine_choice = engine_list.Begin();
 }
 
-function RoadRoute::BuildVehicle()
+function RoadRoute::BuildVehicle(depot)
 {
 	ChooseVehicle();
-	local Veh1= AIVehicle.BuildVehicle(depot_list.Begin(),engine_choice);
+	local Veh1= AIVehicle.BuildVehicle(depot,engine_choice);
 	if(!AIVehicle.IsValidVehicle(Veh1)) 
 		AILog.Warning("Could not build a vehicle: " + AIError.GetLastErrorString());
 	else
 	{
 		local ol=OrderList();
-		foreach(terminal,v in terminal_list)
+		foreach(terminal,v in this.terminal_list)
 		{
 			//ol.AddStop(AIStation.GetStationID(terminal), AIOrder.AIOF_NONE);
 			AIOrder.InsertOrder(Veh1,0,terminal,AIOrder.AIOF_NONE);
@@ -115,7 +115,7 @@ function RoadRoute::EvaluateRoute()
 			max_cargo = AIVehicle.GetCapacity(veh, cargo_type);
 		}
 	}
-	foreach(terminal in terminal_list)
+	foreach(terminal in this.terminal_list)
 	{
 		total_cargo = AIStation.GetCargoWaiting(terminal, cargo_type) + total_cargo;
 	}

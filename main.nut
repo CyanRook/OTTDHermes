@@ -34,7 +34,8 @@ class HermesAI extends AIController
 	Called by OTTD */
 function HermesAI::Start()
 {
-    AILog.Info("HermesAI Started.");
+
+	AILog.Info("HermesAI Started.");
     SetCompanyName();
 	Start_Date = AIDate.GetCurrentDate();
 	
@@ -54,25 +55,42 @@ function HermesAI::Start()
 	AIRoad.SetCurrentRoadType(AIRoad.ROADTYPE_ROAD);
 	local New_Route = RoadRoute();
 	New_Route.Init();
-	New_Route.AddTerminal(Util.BuildBusStation(townid_a));
-	New_Route.AddTerminal(Util.BuildBusStation(townid_a));
-	New_Route.AddTerminal(Util.BuildBusStation(townid_a));
-	New_Route.AddTerminal(Util.BuildBusStation(townid_a));
-	New_Route.AddDepot(Util.BuildDepot(townid_a));
+	local City_Route = RoadRoute();
+	City_Route.Init();
+	local cityStation = Util.BuildBusStation(townid_a)
+	New_Route.AddTerminal(cityStation);
+	City_Route.AddTerminal(cityStation);
+	City_Route.AddTerminal(Util.BuildBusStation(townid_a));
+	City_Route.AddTerminal(Util.BuildBusStation(townid_a));
+	City_Route.AddTerminal(Util.BuildBusStation(townid_a));
+	local countryDepot = Util.BuildDepot(townid_a)
+	New_Route.AddDepot(countryDepot);
+	local cityDepot = Util.BuildDepot(townid_a)
+	City_Route.AddDepot(cityDepot);
+	City_Route.AutoSetCargo();
+	City_Route.BuildVehicle(cityDepot);
 	for(local i=0;i<3;i+=1)
 	{
+		local Town_Route = RoadRoute();
+		Town_Route.Init();
 		local closeTown = Util.ClosestTown(townid_a,townlist,connectedList);
-		connectedList.AddItem(closeTown,0);
-		New_Route.AddTerminal(Util.BuildBusStation(closeTown));
-		New_Route.AddTerminal(Util.BuildBusStation(closeTown));
-		New_Route.AddTerminal(Util.BuildBusStation(closeTown));
-		New_Route.AddTerminal(Util.BuildBusStation(closeTown));
-		New_Route.AddDepot(Util.BuildDepot(closeTown));
 		RoadConnectTown.BuildRoad(townid_a, closeTown);
+		connectedList.AddItem(closeTown,0);
+		local mainStation = Util.BuildBusStation(closeTown)
+		New_Route.AddTerminal(mainStation);
+		Town_Route.AddTerminal(mainStation);
+		Town_Route.AddTerminal(Util.BuildBusStation(closeTown));
+		Town_Route.AddTerminal(Util.BuildBusStation(closeTown));
+		Town_Route.AddTerminal(Util.BuildBusStation(closeTown));
+		local townDepot = Util.BuildDepot(closeTown)
+		Town_Route.AddDepot(Util.BuildDepot(closeTown));
+		Town_Route.AutoSetCargo();
+		Town_Route.BuildVehicle(townDepot);
+		Route_List.append(Town_Route);
 	}
 	New_Route.AutoSetCargo();
-	New_Route.BuildVehicle();
-	New_Route.BuildVehicle();
+	New_Route.BuildVehicle(countryDepot);
+	New_Route.BuildVehicle(countryDepot);
 	
 	Route_List.append(New_Route);
 
@@ -84,6 +102,12 @@ function HermesAI::Start()
     
     AILog.Info("Done");
 }
+
+ function HermesAI::Init()
+ {
+
+ 
+ }
  
  function HermesAI::ActionLoop()
  {
