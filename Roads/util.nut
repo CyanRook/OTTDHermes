@@ -1,6 +1,7 @@
 // Add all the files for libraries here
 import("util.superlib","SuperLib",13);
 Road <- SuperLib.Road;
+require("roadroute.nut");
 class Util
 {
 	constructor();
@@ -45,6 +46,24 @@ function Util::ClosestTown(townStart,townlist,connectedList)
 	return closeTown
 
 } 
+function Util::BuildTownRoute(town,countryRoute)
+{
+	local City_Route = RoadRoute();
+	City_Route.Init();
+	local cityStation = Util.BuildBusStation(town)
+	City_Route.AddTerminal(cityStation);
+	countryRoute.AddTerminal(cityStation)
+	City_Route.AddTerminal(Util.BuildBusStation(town));
+	City_Route.AddTerminal(Util.BuildBusStation(town));
+	City_Route.AddTerminal(Util.BuildBusStation(town));
+	local cityDepot = Util.BuildDepot(town)
+	City_Route.AddDepot(cityDepot);
+	City_Route.AutoSetCargo();
+	City_Route.BuildVehicle(cityDepot);
+
+
+
+}
 
 /*
 	local tile = AITown.GetLocation(town_id);
