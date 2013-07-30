@@ -50,13 +50,13 @@ function Util::BuildTownRoute(town,countryRoute)
 {
 	local City_Route = RoadRoute();
 	City_Route.Init();
-	local cityStation = Util.BuildBusStation(town)
+	local cityStation = Util.BuildBusStation(town);
 	City_Route.AddTerminal(cityStation);
 	countryRoute.AddTerminal(cityStation)
-	City_Route.AddTerminal(Util.BuildBusStation(town));
-	City_Route.AddTerminal(Util.BuildBusStation(town));
-	City_Route.AddTerminal(Util.BuildBusStation(town));
-	local cityDepot = Util.BuildDepot(town)
+	local stations = AITown.GetPopulation(town)/500;
+	for(local i=0;i<stations;i+=1)
+		City_Route.AddTerminal(Util.BuildBusStation(town));
+	local cityDepot = Util.BuildDepot(town);
 	City_Route.AddDepot(cityDepot);
 	City_Route.AutoSetCargo();
 	City_Route.BuildVehicle(cityDepot);
