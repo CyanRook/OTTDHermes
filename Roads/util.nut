@@ -43,7 +43,7 @@ function Util::ClosestTown(townStart,townlist,connectedList)
 				}
 		}
 	}
-	return closeTown
+	return closeTown;
 
 }
 function Util::BuildRoadNetwork(town,townlist)
@@ -63,7 +63,7 @@ function Util::BuildRoadNetwork(town,townlist)
 		Route_List.append(Town_Route);
 	}
 	Route_List.append(New_Route);
-	return New_Route
+	return New_Route;
 
 
 }
@@ -83,7 +83,7 @@ function Util::BuildTownRoute(town,countryRoute)
 	City_Route.AutoSetCargo();
 	City_Route.BuildVehicle(cityDepot);
 
-	return City_Route
+	return City_Route;
 
 }
 
