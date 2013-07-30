@@ -28,6 +28,7 @@ class HermesAI extends AIController
 	Route_List = [];
 	Start_Date = null;
 	Evaluate_Return = false;
+	connectedList = AIList();
 }
  
  /* Main Function Call
@@ -41,7 +42,6 @@ function HermesAI::Start()
 	
     /* Get a list of all towns on the map. */
     local townlist = AITownList();
-	local connectedList = AIList();
 
 
     /* Sort the list by population, highest population first. */
@@ -53,19 +53,15 @@ function HermesAI::Start()
     local townid_b = townlist.Next();
 	connectedList.AddItem(townid_a,0);
 	AIRoad.SetCurrentRoadType(AIRoad.ROADTYPE_ROAD);
-	local New_Route = RoadRoute();
-	New_Route.Init();
-
-	local countryDepot = Util.BuildDepot(townid_a)
-	New_Route.AddDepot(countryDepot);
-	Route_List.append(Util.BuildTownRoute(townid_a,New_Route))
-	for(local i=0;i<3;i+=1)
+	Util.BuildRoadNetwork(townid_a,townlist);
+	foreach(town,v in townlist)
 	{
-		local closeTown = Util.ClosestTown(townid_a,townlist,connectedList);
-		RoadConnectTown.BuildRoad(townid_a, closeTown);
-		connectedList.AddItem(closeTown,0);
-		local Town_Route = Util.BuildTownRoute(closeTown,New_Route)
-		Route_List.append(Town_Route);
+		if(!connectedList.HasItem(town))
+		{
+			Util.BuildRoadNetwork(town,townlist);
+			
+			break;
+		}
 	}
 	/*foreach(town,v in townlist)
 	{

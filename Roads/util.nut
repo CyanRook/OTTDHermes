@@ -31,7 +31,7 @@ function Util::ClosestTown(townStart,townlist,connectedList)
 		//AILog.Info(AITown.IsValidTown(town))
 		if(AITown.IsValidTown(town) && !connectedList.HasItem(town))
 		{
-			AILog.Info(AITown.GetName(town))
+			AILog.Info(AITown.GetName(town));
 			local distance = AITown.GetDistanceManhattanToTile(town,maxTile);
 			AILog.Info(distance);
 			
@@ -45,14 +45,36 @@ function Util::ClosestTown(townStart,townlist,connectedList)
 	}
 	return closeTown
 
-} 
+}
+function Util::BuildRoadNetwork(town,townlist)
+{
+	local New_Route = RoadRoute();
+	New_Route.Init();
+
+	local countryDepot = Util.BuildDepot(town);
+	New_Route.AddDepot(countryDepot);
+	Route_List.append(Util.BuildTownRoute(town,New_Route));
+	for(local i=0;i<3;i+=1)
+	{
+		local closeTown = Util.ClosestTown(town,townlist,connectedList);
+		RoadConnectTown.BuildRoad(town, closeTown);
+		connectedList.AddItem(closeTown,0);
+		local Town_Route = Util.BuildTownRoute(closeTown,New_Route);
+		Route_List.append(Town_Route);
+	}
+	Route_List.append(New_Route);
+	return New_Route
+
+
+}
+ 
 function Util::BuildTownRoute(town,countryRoute)
 {
 	local City_Route = RoadRoute();
 	City_Route.Init();
 	local cityStation = Util.BuildBusStation(town);
 	City_Route.AddTerminal(cityStation);
-	countryRoute.AddTerminal(cityStation)
+	countryRoute.AddTerminal(cityStation);
 	local stations = AITown.GetPopulation(town)/500;
 	for(local i=0;i<stations;i+=1)
 		City_Route.AddTerminal(Util.BuildBusStation(town));
