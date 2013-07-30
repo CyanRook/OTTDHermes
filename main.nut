@@ -51,7 +51,7 @@ function HermesAI::Start()
     /* Pick the two towns with the highest population. */
     local townid_a = townlist.Begin();
     local townid_b = townlist.Next();
-	connectedList.AddItem(townid_a,0)
+	connectedList.AddItem(townid_a,0);
 	AIRoad.SetCurrentRoadType(AIRoad.ROADTYPE_ROAD);
 	local New_Route = RoadRoute();
 	New_Route.Init();
@@ -67,6 +67,14 @@ function HermesAI::Start()
 		local Town_Route = Util.BuildTownRoute(closeTown,New_Route)
 		Route_List.append(Town_Route);
 	}
+	/*foreach(town,v in townlist)
+	{
+		if(!connectedList.HasItem(town))
+		{
+			local Town_Route = Util.BuildTownRoute(town,New_Route);
+			Route_List.append(Town_Route);
+		}
+	}*/
 	New_Route.AutoSetCargo();
 	New_Route.BuildVehicle(countryDepot);
 	New_Route.BuildVehicle(countryDepot);
