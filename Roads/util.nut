@@ -52,6 +52,10 @@ function Util::BuildRoadNetwork(town,townlist)
 	New_Route.Init();
 
 	local countryDepot = Util.BuildDepot(town);
+	while (countryDepot == null)
+	{
+		countryDepot = Util.BuildDepot(town);
+	}
 	New_Route.AddDepot(countryDepot);
 	Route_List.append(Util.BuildTownRoute(town,New_Route));
 	for(local i=0;i<3;i+=1)
@@ -73,11 +77,24 @@ function Util::BuildTownRoute(town,countryRoute)
 	local City_Route = RoadRoute();
 	City_Route.Init();
 	local cityStation = Util.BuildBusStation(town);
+	while (cityStation == null)
+	{
+		cityStation = Util.BuildBusStation(town);
+	}
 	City_Route.AddTerminal(cityStation);
 	countryRoute.AddTerminal(cityStation);
 	local stations = AITown.GetPopulation(town)/500;
+	if(stations < 1)
+		stations = 1;
+	local bus_station = null;
 	for(local i=0;i<stations;i+=1)
-		City_Route.AddTerminal(Util.BuildBusStation(town));
+	{
+		while(bus_station == null)
+		{
+			bus_station = Util.BuildBusStation(town);
+		}
+		City_Route.AddTerminal(bus_station);
+	}
 	local cityDepot = Util.BuildDepot(town);
 	City_Route.AddDepot(cityDepot);
 	City_Route.AutoSetCargo();
