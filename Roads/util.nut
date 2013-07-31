@@ -61,7 +61,11 @@ function Util::BuildRoadNetwork(town,townlist)
 	for(local i=0;i<3;i+=1)
 	{
 		local closeTown = Util.ClosestTown(town,townlist,connectedList);
-		RoadConnectTown.BuildRoad(town, closeTown);
+		local road_built = false;
+		while (not road_built)
+		{
+			road_built = RoadConnectTown.BuildRoad(town, closeTown);
+		}
 		connectedList.AddItem(closeTown,0);
 		local Town_Route = Util.BuildTownRoute(closeTown,New_Route);
 		Route_List.append(Town_Route);
