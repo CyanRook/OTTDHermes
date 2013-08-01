@@ -54,15 +54,6 @@ function HermesAI::Start()
 	connectedList.AddItem(townid_a,0);
 	AIRoad.SetCurrentRoadType(AIRoad.ROADTYPE_ROAD);
 	Util.BuildRoadNetwork(townid_a,townlist);
-	foreach(town,v in townlist)
-	{
-		if(!connectedList.HasItem(town))
-		{
-			Util.BuildRoadNetwork(town,townlist);
-			
-			break;
-		}
-	}
 	/*foreach(town,v in townlist)
 	{
 		if(!connectedList.HasItem(town))
@@ -134,6 +125,15 @@ function HermesAI::BuildNewRoutes()
 	if(Evaluate_Return == false)
 	{
 		//Code to build a new route set
+		foreach(town,v in townlist)
+		{
+			if(!connectedList.HasItem(town))
+			{
+				Util.BuildRoadNetwork(town,townlist);
+			
+				break;
+			}
+		}
 	}
 }
 		

@@ -13,8 +13,17 @@ function RoadConnectTown::BuildRoad(townid_a, townid_b)
 	/* Create an instance of the pathfinder. */
 	local pathfinder = RoadPathFinder();
 
-	/* Set the cost for making a turn extreme high. */
-	pathfinder.cost.turn = 5000;
+	/* Modified cost patterns */
+	pathfinder.cost.tile = 100;
+	pathfinder.cost.no_existing_road = 100;
+	pathfinder.cost.turn = 200;
+	pathfinder.slope = 600;
+	pathfinder.cost.bridge_per_tile = 500;
+	pathfinder.cost.tunnel_per_tile = 300;
+	pathfinder.cost.coast = 20;
+	pathfinder.cost.max_bridge_length = 100;
+	pathfinder.cost.max_tunnel_length = 100;
+	
 
 	/* Give the source and goal tiles to the pathfinder. */
 	pathfinder.InitializePath([AITown.GetLocation(townid_a)], [AITown.GetLocation(townid_b)]);

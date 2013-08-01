@@ -66,11 +66,21 @@ function RoadRoute::ChooseVehicle()
 	engine_list.KeepValue(AIRoad.ROADTYPE_ROAD);
 	
 	local balance = AICompany.GetBankBalance(AICompany.COMPANY_SELF);
-	engine_list.Valuate(AIEngine.GetPrice);
-	engine_list.KeepBelowValue(balance);
-
+	
 	engine_list.Valuate(AIEngine.GetCargoType)
 	engine_list.KeepValue(cargo_type); 
+	
+	engine_list.Valuate(AIEngine.GetPrice);
+	engine_list.KeepBelowValue(balance);
+	
+	if (engine_list.IsEmpty())
+	{
+		engine_list.Valuate(AIEngine.GetRoadType);
+		engine_list.KeepValue(AIRoad.ROADTYPE_ROAD);
+		engine_list.Valuate(AIEngine.GetCargoType)
+		engine_list.KeepValue(cargo_type);
+		engine_list.KeepBottom(1);
+	}
 
 	engine_list.Valuate(AIEngine.GetCapacity)
 	engine_list.KeepTop(1);
