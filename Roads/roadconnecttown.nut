@@ -17,7 +17,7 @@ function RoadConnectTown::BuildRoad(townid_a, townid_b)
 	pathfinder.cost.tile = 100;
 	pathfinder.cost.no_existing_road = 100;
 	pathfinder.cost.turn = 200;
-	pathfinder.slope = 600;
+	pathfinder.cost.slope = 600;
 	pathfinder.cost.bridge_per_tile = 500;
 	pathfinder.cost.tunnel_per_tile = 300;
 	pathfinder.cost.coast = 20;

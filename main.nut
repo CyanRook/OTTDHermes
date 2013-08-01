@@ -53,20 +53,17 @@ function HermesAI::Start()
     local townid_b = townlist.Next();
 	connectedList.AddItem(townid_a,0);
 	AIRoad.SetCurrentRoadType(AIRoad.ROADTYPE_ROAD);
-	Util.BuildRoadNetwork(townid_a,townlist);
+	local Main_Route = Util.BuildRoadNetwork(townid_a,townlist);
 	/*foreach(town,v in townlist)
 	{
 		if(!connectedList.HasItem(town))
 		{
-			local Town_Route = Util.BuildTownRoute(town,New_Route);
+			local Town_Route = Util.BuildTownRoute(town,Main_Route);
 			Route_List.append(Town_Route);
 		}
 	}*/
-	New_Route.AutoSetCargo();
-	New_Route.BuildVehicle(countryDepot);
-	New_Route.BuildVehicle(countryDepot);
+
 	
-	Route_List.append(New_Route);
 
 	AILog.Info("Made it past util stuff");
 	
@@ -125,6 +122,7 @@ function HermesAI::BuildNewRoutes()
 	if(Evaluate_Return == false)
 	{
 		//Code to build a new route set
+		townlist = AITownList();
 		foreach(town,v in townlist)
 		{
 			if(!connectedList.HasItem(town))
