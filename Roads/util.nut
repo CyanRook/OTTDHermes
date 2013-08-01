@@ -46,7 +46,7 @@ function Util::ClosestTown(townStart,townlist,connectedList)
 	return closeTown;
 
 }
-function Util::BuildRoadNetwork(town,townlist)
+function Util::BuildRoadNetwork(town,townlist,connectedList)
 {
 	local Main_Route = RoadRoute();
 	Main_Route.Init();

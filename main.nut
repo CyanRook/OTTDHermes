@@ -29,6 +29,7 @@ class HermesAI extends AIController
 	Start_Date = null;
 	Evaluate_Return = false;
 	connectedList = AIList();
+	Main_Route = null;
 }
  
  /* Main Function Call
@@ -53,15 +54,16 @@ function HermesAI::Start()
     local townid_b = townlist.Next();
 	connectedList.AddItem(townid_a,0);
 	AIRoad.SetCurrentRoadType(AIRoad.ROADTYPE_ROAD);
-	local Main_Route = Util.BuildRoadNetwork(townid_a,townlist);
-	/*foreach(town,v in townlist)
+	Main_Route = Util.BuildRoadNetwork(townid_a,townlist,connectedList);
+	foreach(town,v in townlist)
 	{
 		if(!connectedList.HasItem(town))
 		{
-			local Town_Route = Util.BuildTownRoute(town,Main_Route);
+			local Town_Route = Util.BuildRoadNetwork(town,townlist,connectedList);
 			Route_List.append(Town_Route);
+			break;
 		}
-	}*/
+	}
 
 	
 
@@ -122,12 +124,13 @@ function HermesAI::BuildNewRoutes()
 	if(Evaluate_Return == false)
 	{
 		//Code to build a new route set
-		townlist = AITownList();
+		local townlist = AITownList();
 		foreach(town,v in townlist)
 		{
 			if(!connectedList.HasItem(town))
 			{
-				Util.BuildRoadNetwork(town,townlist);
+				local Town_Route = Util.BuildTownRoute(town,Main_Route);
+				Route_List.append(Town_Route);
 			
 				break;
 			}
